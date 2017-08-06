@@ -1,0 +1,32 @@
+{
+  "name": "typed-option",
+  "version": "0.0.1",
+  "description": "Typed options",
+  "main": "lib/index",
+  "typings": "lib/index",
+  "scripts": {
+    "build": "tsc -p .",
+    "test": "karma start karma.conf.js"
+  },
+  "keywords": [
+    "option",
+    "typed",
+    "typescript",
+    "functional"
+  ],
+  "author": "anderscan",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jasmine": "^2.5.47",
+    "jasmine": "^2.6.0",
+    "jasmine-core": "^2.6.1",
+    "karma": "^1.6.0",
+    "karma-chrome-launcher": "^2.0.0",
+    "karma-firefox-launcher": "^1.0.1",
+    "karma-jasmine": "^1.1.0",
+    "karma-spec-reporter": "0.0.31",
+    "karma-typescript": "^3.0.1",
+    "typescript": "2.3.1"
+  },
+  "repository": "AndersCan/typed-option"
+}

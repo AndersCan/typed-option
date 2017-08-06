@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "declaration": true,
+    "outDir": "lib",
+    "module": "commonjs",
+    "skipLibCheck": true
+  },
+  "include": [
+    "src"
+  ]
+}
