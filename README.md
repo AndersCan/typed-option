@@ -161,6 +161,7 @@ const getMiddleName = (person: Person): Option<string> => {
 * isSome(): this is Some<A>;
 
 ## Advanced usage
+### Lifting
 You may think that to get the befit of `Option`, you have to rewrite *all* functions in your application. All input parameters and output have to be wrapped in a `Option`. This is, perhaps surprisingly, not the case.
 
 We can create a function `lift` that converts your *normal* functions to accept and return Options.
@@ -178,13 +179,33 @@ function lift<A,B>(fn: (x: A) => B): (y: Option<A>) => Option<B> {
 `return z => z.map(fn)` from the signature above, we know that the type of `z` is `Option<A>`. We then only need to apply the transformation function `fn` to `z` by calling `.map(fn)`
 
 You can now use `lift` to create functions that accept and return `Options`.
+
+Below is an example lifting `Math.abs`
 ```javascript
 const absoluteLifted = lift(Math.abs)
 const opt1 = new Some(-1000)
 const opt1Abs = absoluteLifted(opt1)
-if (opt1Abs.isSome()) (
-  console.log(opt1Abs.get()) // 1000
-)
+opt1Abs.getOrElse(() => -1) // 1000
 ```
+#### Multiple arguments
+You may be wondering how you would lift a function that takes multiple input parameters. It is very similar
+```javascript
+function liftMulti<A, B, C>(ao: Option<A>, bo: Option<B>, fn: (a: A, b: B) => C): Option<C> {
+  if (ao.isSome() && bo.isSome()) {
+    return new Some(fn(ao.get(), bo.get()))
+  } else {
+    return new None();
+  }
+}
 
-Lets say our goal is to create a version of `Math.abs` that accepts `Option<number>` instead of `number`
+const opt1 = new Some(1)
+const opt2 = new Some(10)
+const maxOpt = liftMulti(opt1, opt2, Math.max)
+maxOpt.getOrElse(() => 1)) // 10
+
+const opt1 = new None()
+const opt2 = new Some(10)
+const maxOpt = liftMulti(opt1, opt2, Math.max)
+maxOpt.getOrElse(() => -1)) // -1
+```
+Please note that `liftMulti` returns `None` if *any* of the input are of type `None`.
