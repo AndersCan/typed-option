@@ -1,16 +1,26 @@
 #typed-option
 
+Typed option library written in TypeScript.
+## Acknowledgement
+Inspired by [Functional programming in Scala](manning.com/FunctionalProgrammingScala) (Chapter 4: 'Handling errors without exceptions')
 
-Option library for TypeScript.
+## Contents
+- [Introduction](#introduction)
+- [Purpose](#Purpose)
+- [Methods](#methods)
+- [Method signatures](#Method-signatures)
 
+
+## Introduction
 An `Option` is either of type `Some` or `None`.
 * **Some** - represents a value of something (a *defined* value)
 * **None** - represents a value of nothing (an *undefined* value)
+Instead of throwing exceptions in our functions or returning dummy data, we can return a `Option` and let the caller decide how to deal with errors. When we return a Option, the called must explicitly deal with both the `Some`(success) and `None`(error) cases. See [Purpose](#purpose) for more.
 
-## Purpose and useage
-The main purpose of using a `Option` is so that error cases are handled by the caller and not forgotten. Lets illustrate this with an example.
+## Purpose
+The main purpose of using a `Option` is so that error cases are always handled by the caller. It is far too easy to forget to check if the return value from a function is `undefined`. Lets illustrate this with an example.
 
-We have a function that returns the first element of a list.
+We have a function, `getFirst`, that returns the first element of a list.
  ```javascript
  function getFirst(list: number[]): number{
    if(!list || list.length === 0){
@@ -27,7 +37,6 @@ The issue her is that all callers of `getFirst` must remember to check if the re
  getFirst([]) // undefined
  getFirst(undefined) // undefined
  ```
-Note: If you are using `strict: true` in your tsconfig, check the example further down.
 
 If the caller forgets to check for this, the `undefined` value could be passed further along to other parts of the code. This could potentially cause a runtime exception far away from the `getFirst` method call.
 
@@ -52,7 +61,7 @@ To actually use the return value from `getFirst`, we have to check if it is a `S
 const opt1 = getFirst([1,2,3]) // Some(1)
 if(opt1.isSome()){
   // TypeScript will infere that this is a Some type and allow us to call `.get`
-  console.log('getFirst([1,2,3])', opt1.get())
+  opt1.get() // 1
 }
 ```
 If you want a default value for when a option is of type None, you can use `getOrElse`
@@ -60,41 +69,12 @@ If you want a default value for when a option is of type None, you can use `getO
 getFirst([1,2,3]).getOrElse(() => 999) // 1
 getFirst([]).getOrElse(() => 999) // 999
 ```
-Read the section below for more methods.
+Read the section [Methods](#methods) for more.
 
 ## Methods
 ### Explanation
-Defining some helper methods to help illustrate functions use cases
-```javascript
-interface Person {
-  name: string,
-  middleName?: string
-}
-const people: Person[] = [
-  {
-    name: 'NoMiddleName'
-  },
-  {
-    name: 'HasMiddleName',
-    middleName: 'MyMiddleName'
-  }
-]
-const findPerson = (input: string): Option<Person> => {
-  const result = people.find(p => p.name === input)
-  if (result) {
-    return new Some(result)
-  } else {
-    return new None()
-  }
-}
-const getMiddleName = (person: Person): Option<string> => {
-  if (person.middleName) {
-    return new Some(person.middleName)
-  } else {
-    return new None()
-  }
-}
-```
+Defining some [helper methods](#Helper-methods) to help illustrate different use cases
+
 
 `map` apply fn to a Option if it is of type `Some`
 ```javascript
@@ -139,7 +119,37 @@ if(opt1.isSome()){
   // opt1 is Some in this block
 }
 ```
-
+#### Helper methods
+```javascript
+interface Person {
+  name: string,
+  middleName?: string
+}
+const people: Person[] = [
+  {
+    name: 'NoMiddleName'
+  },
+  {
+    name: 'HasMiddleName',
+    middleName: 'MyMiddleName'
+  }
+]
+const findPerson = (input: string): Option<Person> => {
+  const result = people.find(p => p.name === input)
+  if (result) {
+    return new Some(result)
+  } else {
+    return new None()
+  }
+}
+const getMiddleName = (person: Person): Option<string> => {
+  if (person.middleName) {
+    return new Some(person.middleName)
+  } else {
+    return new None()
+  }
+}
+```
 ### Method signatures:
 * map<B>(fn: (a: A) => B): Option<B>;
 * flatMap<B>(fn: (a: A) => Option<B>): Option<B>;

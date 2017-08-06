@@ -1,7 +1,7 @@
 {
   "name": "typed-option",
   "version": "0.0.1",
-  "description": "Typed options",
+  "description": "Typed option library",
   "main": "lib/index",
   "typings": "lib/index",
   "scripts": {
