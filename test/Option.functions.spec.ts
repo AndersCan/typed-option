@@ -4,7 +4,7 @@ const positiveNumber = (input: number): Option<number> => {
   if (input > 0) {
     return new Some(input)
   } else {
-    return new None<number>()
+    return new None()
   }
 }
 interface Person {
@@ -25,14 +25,14 @@ const findPerson = (input: string): Option<Person> => {
   if (result) {
     return new Some(result)
   } else {
-    return new None<Person>()
+    return new None()
   }
 }
 const getMiddleName = (person: Person): Option<string> => {
   if (person.middleName) {
     return new Some(person.middleName)
   } else {
-    return new None<string>()
+    return new None()
   }
 }
 describe("Option - functions", function () {

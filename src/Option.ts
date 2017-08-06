@@ -4,7 +4,7 @@ export abstract class Option<A> {
     if (this.isSome()) {
       return new Some(fn(this.get()))
     } else {
-      return new None<B>();
+      return new None();
     }
   }
 
@@ -12,7 +12,7 @@ export abstract class Option<A> {
     if (this.isSome()) {
       return fn(this.get())
     } else {
-      return new None<B>();
+      return new None();
     }
   }
 
@@ -37,14 +37,14 @@ export abstract class Option<A> {
       if (fn(this.get())) {
         return this
       } else {
-        return new None<A>()
+        return new None()
       }
     } else {
       return this
     }
   }
 
-  isNone(): this is None<never> {
+  isNone(): this is None {
     return !this._isSome()
   }
   isSome(): this is Some<A> {
@@ -52,7 +52,7 @@ export abstract class Option<A> {
   }
 }
 
-export class None<A> extends Option<A>{
+export class None extends Option<never>{
   protected _isSome() {
     return false;
   }
