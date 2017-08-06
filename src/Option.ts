@@ -8,6 +8,14 @@ export abstract class Option<A> {
     }
   }
 
+  flatMap<B>(fn: (a: A) => Option<B>): Option<B> {
+    if (this.isSome()) {
+      return fn(this.get())
+    } else {
+      return new None<B>();
+    }
+  }
+
   isNone(): this is None<never> {
     return !this._isSome()
   }
