@@ -16,6 +16,34 @@ export abstract class Option<A> {
     }
   }
 
+  getOrElse(fn: () => A): A {
+    if (this.isSome()) {
+      return this.get();
+    } else {
+      return fn();
+    }
+  }
+
+  orElse(fn: () => Option<A>): Option<A> {
+    if (this.isSome()) {
+      return this;
+    } else {
+      return fn();
+    }
+  }
+
+  filter(fn: (a: A) => boolean): Option<A> {
+    if (this.isSome()) {
+      if (fn(this.get())) {
+        return this
+      } else {
+        return new None<A>()
+      }
+    } else {
+      return this
+    }
+  }
+
   isNone(): this is None<never> {
     return !this._isSome()
   }

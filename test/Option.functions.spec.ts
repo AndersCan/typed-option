@@ -150,4 +150,96 @@ describe("Option - functions", function () {
     });
   });
 
+  describe("getOrElse", function () {
+    describe("None", function () {
+      it("returns 'else' value", function () {
+        const none = positiveNumber(-1)
+        const result = none.getOrElse(() => 100)
+        expect(result).toEqual(100)
+      });
+    });
+
+    describe("Some", function () {
+      it("does not return 'else' value", function () {
+        const some = positiveNumber(1)
+        const result = some.getOrElse(() => -999)
+        expect(result).toEqual(1)
+      });
+      it("does not call 'else' function", function () {
+        const some = positiveNumber(1)
+        const result = some.getOrElse(() => {
+          throw Error('none should not call fn')
+        })
+        expect(result).toEqual(1)
+      });
+    });
+  });
+
+  describe("orElse", function () {
+    describe("None", function () {
+      it("returns None", function () {
+        const none = positiveNumber(-1)
+        const result = none.orElse(() => positiveNumber(-1))
+        expect(result.isNone()).toBeTruthy()
+      });
+      it("returns Some", function () {
+        const none = positiveNumber(-1)
+        const result = none.orElse(() => positiveNumber(1))
+        expect(result.isNone()).toBeFalsy()
+      });
+      it("returns correct Some value", function () {
+        const none = positiveNumber(-1)
+        const result = none.orElse(() => positiveNumber(1))
+        if (result.isSome()) {
+          expect(result.get()).toEqual(1)
+        }
+      });
+    });
+
+    describe("Some", function () {
+      it("does not return 'else' value", function () {
+        const some = positiveNumber(1)
+        const result = some.orElse(() => positiveNumber(-1))
+        expect(result.isSome()).toBeTruthy()
+      });
+      it("returns correct value", function () {
+        const some = positiveNumber(1)
+        const result = some.orElse(() => positiveNumber(-1))
+        if (result.isSome()) {
+          expect(result.get()).toEqual(1)
+        }
+      });
+    });
+
+    describe("filter", function () {
+      describe("None", function () {
+        it("returns None", function () {
+          const none = positiveNumber(-1)
+          const result = none.filter((a) => true)
+          expect(result.isNone()).toBeTruthy()
+        });
+      });
+
+      describe("Some", function () {
+        it("returns None with false predicate", function () {
+          const some = positiveNumber(1)
+          const result = some.filter((x) => false)
+          expect(result.isNone()).toBeTruthy()
+        });
+        it("returns Some with true predicate", function () {
+          const some = positiveNumber(1)
+          const result = some.filter((a) => true)
+          expect(result.isSome()).toBeTruthy()
+        });
+        it("returns Some with false predicate", function () {
+          const some = positiveNumber(1)
+          const result = some.filter((a) => true)
+          if (result.isSome()) {
+            expect(result.get()).toEqual(1)
+          }
+        });
+      });
+    });
+  });
+
 });
