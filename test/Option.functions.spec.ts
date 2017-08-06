@@ -177,17 +177,12 @@ describe("Option - functions", function () {
 
   describe("orElse", function () {
     describe("None", function () {
-      it("returns None", function () {
-        const none = positiveNumber(-1)
-        const result = none.orElse(() => positiveNumber(-1))
-        expect(result.isNone()).toBeTruthy()
-      });
-      it("returns Some", function () {
+      it("returns 'orElse' value", function () {
         const none = positiveNumber(-1)
         const result = none.orElse(() => positiveNumber(1))
-        expect(result.isNone()).toBeFalsy()
+        expect(result.isSome()).toBeTruthy()
       });
-      it("returns correct Some value", function () {
+      it("returns correct 'erElse' value", function () {
         const none = positiveNumber(-1)
         const result = none.orElse(() => positiveNumber(1))
         if (result.isSome()) {
