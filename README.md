@@ -7,9 +7,11 @@ Inspired by [Functional programming in Scala](manning.com/FunctionalProgrammingS
 ## Contents
 - [Introduction](#introduction)
 - [Purpose](#Purpose)
-- [Methods](#methods)
-- [Method signatures](#Method-signatures)
+- [Functions](#functions)
+- [Function signatures](#function-signatures)
+- [Advanced usage](#Advanced-usage)
 
+Note: Please read about `lift` in [Advanced usage](#Advanced-usage) if you intend to implement this into a already existing project.
 
 ## Introduction
 An `Option` is either of type `Some` or `None`.
@@ -38,7 +40,7 @@ The issue her is that all callers of `getFirst` must remember to check if the re
  getFirst(undefined) // undefined
  ```
 
-If the caller forgets to check for this, the `undefined` value could be passed further along to other parts of the code. This could potentially cause a runtime exception far away from the `getFirst` method call.
+If the caller forgets to check for this, the `undefined` value could be passed further along to other parts of the code. This could potentially cause a runtime exception far away from the `getFirst` function call.
 
 We can avoid this issue by taking advantage of `Option`. Let us rewrite `getFirst` to return a `Option<number>` instead of a `number`.
 
@@ -69,12 +71,11 @@ If you want a default value for when a option is of type None, you can use `getO
 getFirst([1,2,3]).getOrElse(() => 999) // 1
 getFirst([]).getOrElse(() => 999) // 999
 ```
-Read the section [Methods](#methods) for more.
+Read the section [Functions](#functions) for more.
 
-## Methods
+## Functions
 ### Explanation
-Defining some [helper methods](#Helper-methods) to help illustrate different use cases
-
+Defining some [helper functions](#helper-functions) to help illustrate `flatMap`
 
 `map` apply fn to a Option if it is of type `Some`
 ```javascript
@@ -119,7 +120,7 @@ if(opt1.isSome()){
   // opt1 is Some in this block
 }
 ```
-#### Helper methods
+#### Helper functions
 ```javascript
 interface Person {
   name: string,
@@ -150,7 +151,7 @@ const getMiddleName = (person: Person): Option<string> => {
   }
 }
 ```
-### Method signatures:
+### Function signatures:
 * map<B>(fn: (a: A) => B): Option<B>;
 * flatMap<B>(fn: (a: A) => Option<B>): Option<B>;
 * getOrElse(fn: () => A): A;
@@ -158,3 +159,32 @@ const getMiddleName = (person: Person): Option<string> => {
 * filter(fn: (a: A) => boolean): Option<A>;
 * isNone(): this is None;
 * isSome(): this is Some<A>;
+
+## Advanced usage
+You may think that to get the befit of `Option`, you have to rewrite *all* functions in your application. All input parameters and output have to be wrapped in a `Option`. This is, perhaps surprisingly, not the case.
+
+We can create a function `lift` that converts your *normal* functions to accept and return Options.
+
+The `lift` function is a mouthfull, but its meaning will become clear.
+```javascript
+function lift<A,B>(fn: (x: A) => B): (y: Option<A>) => Option<B> {
+  return z => z.map(fn)
+}
+```
+`fn: (x: A) => B)` signature of our transformation/map function
+
+`(y: Option<A>) => Option<B>` is defining the return type of `lift`.
+
+`return z => z.map(fn)` from the signature above, we know that the type of `z` is `Option<A>`. We then only need to apply the transformation function `fn` to `z` by calling `.map(fn)`
+
+You can now use `lift` to create functions that accept and return `Options`.
+```javascript
+const absoluteLifted = lift(Math.abs)
+const opt1 = new Some(-1000)
+const opt1Abs = absoluteLifted(opt1)
+if (opt1Abs.isSome()) (
+  console.log(opt1Abs.get()) // 1000
+)
+```
+
+Lets say our goal is to create a version of `Math.abs` that accepts `Option<number>` instead of `number`
