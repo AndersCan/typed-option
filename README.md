@@ -1,28 +1,32 @@
-#typed-option
+# typed-option
+[![Build Status](https://travis-ci.org/AndersCan/typed-option.svg?branch=master)](https://travis-ci.org/AndersCan/typed-option)
+[![Coverage Status](https://coveralls.io/repos/github/AndersCan/typed-option/badge.svg?branch=master)](https://coveralls.io/github/AndersCan/typed-option?branch=master)
 
-Typed option library written in TypeScript.
+Option library written in TypeScript.
+
 ## Acknowledgement
-Inspired by [Functional programming in Scala](manning.com/FunctionalProgrammingScala) (Chapter 4: 'Handling errors without exceptions')
+Inspired by [Functional programming in Scala](https://www.manning.com/books/functional-programming-in-scala)
 
 ## Contents
 - [Introduction](#introduction)
-- [Purpose](#Purpose)
+- [Purpose](#purpose)
 - [Functions](#functions)
 - [Function signatures](#function-signatures)
-- [Advanced usage](#Advanced-usage)
+- [Advanced usage](#advanced-usage)
 
-Note: Please read about `lift` in [Advanced usage](#Advanced-usage) if you intend to implement this into a already existing project.
+Note: Please read about `lift` in [Advanced usage](#advanced-usage) if you intend to implement this into a already existing project.
 
 ## Introduction
 An `Option` is either of type `Some` or `None`.
 * **Some** - represents a value of something (a *defined* value)
 * **None** - represents a value of nothing (an *undefined* value)
-Instead of throwing exceptions in our functions or returning dummy data, we can return a `Option` and let the caller decide how to deal with errors. When we return a Option, the called must explicitly deal with both the `Some`(success) and `None`(error) cases. See [Purpose](#purpose) for more.
+
+When we return a Option, the caller must explicitly deal with both the `Some`(success) and `None`(error) cases. This simple concept forces callers to deal with errors. See [Purpose](#purpose) for more.
 
 ## Purpose
 The main purpose of using a `Option` is so that error cases are always handled by the caller. It is far too easy to forget to check if the return value from a function is `undefined`. Lets illustrate this with an example.
 
-We have a function, `getFirst`, that returns the first element of a list.
+Below we have defined a function, `getFirst`, that returns either the first element of a list or undefined if the list has no element.
  ```javascript
  function getFirst(list: number[]): number{
    if(!list || list.length === 0){
@@ -48,7 +52,7 @@ We can avoid this issue by taking advantage of `Option`. Let us rewrite `getFirs
  import {Option, Some, None} from 'typed-option'
 
  function getFirst(list: number[]): Option<number>{
-   if(list.length === 0){
+   if(!list || list.length === 0){
      return new None()
    } else {
     return new Some(list[0])
@@ -66,16 +70,9 @@ if(opt1.isSome()){
   opt1.get() // 1
 }
 ```
-If you want a default value for when a option is of type None, you can use `getOrElse`
-```javascript
-getFirst([1,2,3]).getOrElse(() => 999) // 1
-getFirst([]).getOrElse(() => 999) // 999
-```
-Read the section [Functions](#functions) for more.
 
 ## Functions
 ### Explanation
-Defining some [helper functions](#helper-functions) to help illustrate `flatMap`
 
 `map` apply fn to a Option if it is of type `Some`
 ```javascript
@@ -84,6 +81,7 @@ none().map((text) => "Hello, " + text) // None()
 ```
 
 `flatMap` Same as map, but `fn` returns a option. `flatMap` removes the nested option.
+I've defined some [helper functions](#helper-functions) to help illustrate.
 ```javascript
 const option = findPerson('HasMiddleName')
 option.flatMap(getMiddleName) // Some('MyMiddleName')
@@ -104,8 +102,8 @@ none().orElse(() => Some(999)) // Some(999)
 
 `filter` gives a predicate that a `Some` must hold. If not, returns `None`
 ```javascript
-some(1).filter((v) => v === 100) // None()
-some(100).filter((v) => v === 100) // Some(100)
+some(1).filter((v) => false) // None()
+some(100).filter((v) => true) // Some(100)
 none().filter((v) => true) // None()
 ```
 
@@ -151,14 +149,14 @@ const getMiddleName = (person: Person): Option<string> => {
   }
 }
 ```
-### Function signatures:
-* map<B>(fn: (a: A) => B): Option<B>;
-* flatMap<B>(fn: (a: A) => Option<B>): Option<B>;
-* getOrElse(fn: () => A): A;
-* orElse(fn: () => Option<A>): Option<A>;
-* filter(fn: (a: A) => boolean): Option<A>;
-* isNone(): this is None;
-* isSome(): this is Some<A>;
+### Function signatures
+- `map<B>(fn: (a: A) => B): Option<B>;`
+- `flatMap<B>(fn: (a: A) => Option<B>): Option<B>;`
+- `getOrElse(fn: () => A): A;`
+- `orElse(fn: () => Option<A>): Option<A>;`
+- `filter(fn: (a: A) => boolean): Option<A>;`
+- `isNone(): this is None;`
+- `isSome(): this is Some<A>;`
 
 ## Advanced usage
 ### Lifting
