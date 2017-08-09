@@ -1,8 +1,8 @@
 # typed-option
 [![Build Status](https://travis-ci.org/AndersCan/typed-option.svg?branch=master)](https://travis-ci.org/AndersCan/typed-option)
-[![Coverage Status](https://coveralls.io/repos/github/AndersCan/typed-option/badge.svg?branch=master)](https://coveralls.io/github/AndersCan/typed-option?branch=master)
+[![codecov](https://codecov.io/gh/AndersCan/typed-option/branch/master/graph/badge.svg)](https://codecov.io/gh/AndersCan/typed-option)
 
-Option library written in TypeScript.
+Option library with types.
 
 ## Acknowledgement
 Inspired by [Functional programming in Scala](https://www.manning.com/books/functional-programming-in-scala)
