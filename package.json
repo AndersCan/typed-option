@@ -1,6 +1,6 @@
 {
   "name": "typed-option",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Typed option library",
   "main": "lib/index",
   "typings": "lib/index",
