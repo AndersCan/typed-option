@@ -3,7 +3,7 @@ import { Option, Some, None } from '../src/index'
 const parseIntOption = (v: string): Option<number> => {
   const result = Number.parseInt(v)
   if (Number.isNaN(result)) {
-    return new None()
+    return None
   } else {
     return new Some(result)
   }
@@ -17,7 +17,7 @@ function liftMulti<A, B, C>(ao: Option<A>, bo: Option<B>, fn: (a: A, b: B) => C)
   if (ao.isSome() && bo.isSome()) {
     return new Some(fn(ao.get(), bo.get()))
   } else {
-    return new None();
+    return None;
   }
 }
 describe("Option - advanced usage ", function () {
@@ -35,7 +35,7 @@ describe("Option - advanced usage ", function () {
       expect(maxOpt.getOrElse(() => 1)).toEqual(10) // 1000
     });
     it("multiple input values -- returns None", function () {
-      const opt1 = new None()
+      const opt1 = None
       const opt2 = new Some(10)
       const maxOpt = liftMulti(opt1, opt2, Math.max)
       expect(maxOpt.getOrElse(() => -1)).toEqual(-1) // 1000
