@@ -4,7 +4,7 @@ export abstract class Option<A> {
     if (this.isSome()) {
       return new Some(fn(this.get()))
     } else {
-      return new None();
+      return singletonNone;
     }
   }
 
@@ -12,7 +12,7 @@ export abstract class Option<A> {
     if (this.isSome()) {
       return fn(this.get())
     } else {
-      return new None();
+      return singletonNone;
     }
   }
 
@@ -37,10 +37,10 @@ export abstract class Option<A> {
       if (fn(this.get())) {
         return this
       } else {
-        return new None()
+        return singletonNone
       }
     } else {
-      return this
+      return singletonNone
     }
   }
 
@@ -57,6 +57,8 @@ export class None extends Option<never>{
     return false;
   }
 }
+
+export const singletonNone = new None();
 
 export class Some<A> extends Option<A>{
   constructor(public value: A) {
