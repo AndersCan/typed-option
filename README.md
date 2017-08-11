@@ -53,7 +53,7 @@ We can avoid this issue by taking advantage of `Option`. Let us rewrite `getFirs
 
  function getFirst(list: number[]): Option<number>{
    if(!list || list.length === 0){
-     return new None()
+     return None
    } else {
     return new Some(list[0])
    }
@@ -138,14 +138,14 @@ const findPerson = (input: string): Option<Person> => {
   if (result) {
     return new Some(result)
   } else {
-    return new None()
+    return None
   }
 }
 const getMiddleName = (person: Person): Option<string> => {
   if (person.middleName) {
     return new Some(person.middleName)
   } else {
-    return new None()
+    return None
   }
 }
 ```
@@ -192,7 +192,7 @@ function liftMulti<A, B, C>(ao: Option<A>, bo: Option<B>, fn: (a: A, b: B) => C)
   if (ao.isSome() && bo.isSome()) {
     return new Some(fn(ao.get(), bo.get()))
   } else {
-    return new None();
+    return None;
   }
 }
 
