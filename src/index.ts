@@ -1,4 +1,4 @@
-import { Option, Some, None } from './Option'
+import { Option, Some, singletonNone as None } from './Option'
 
 export {
   Option,

@@ -4,7 +4,7 @@ const positiveNumber = (input: number): Option<number> => {
   if (input > 0) {
     return new Some(input)
   } else {
-    return new None()
+    return None
   }
 }
 describe("Option - simple tests", function () {
