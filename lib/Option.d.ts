@@ -11,6 +11,7 @@ export declare abstract class Option<A> {
 export declare class None extends Option<never> {
     protected _isSome(): boolean;
 }
+export declare const singletonNone: None;
 export declare class Some<A> extends Option<A> {
     value: A;
     constructor(value: A);
