@@ -1,13 +1,14 @@
 export abstract class Option<A> {
   /**
    * Smart constructor for Options.
-   * Returns None iff `ele` is falsy else Some(ele)
+   * Default predicate returns None iff `ele` is falsy else Some(ele)
    *
-   * @param ele The element to convert to a Option
+   * @param element The element to convert to a Option
+   * @param predicate Optional predicate to determine if ele is None or Some
    * @return {Option} returns a `None` for all falsy values
    */
-  static from<E>(ele: E): Option<E> {
-    return !!ele ? new Some(ele) : singletonNone
+  static from<E>(element: E, predicate: (e: E) => boolean = (e) => !!e): Option<E> {
+    return predicate(element) ? new Some(element) : singletonNone
   }
   protected abstract _isSome(): boolean
   map<B>(fn: (a: A) => B): Option<B> {
