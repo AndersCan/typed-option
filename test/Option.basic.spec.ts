@@ -7,7 +7,7 @@ const positiveNumber = (input: number): Option<number> => {
     return None
   }
 }
-describe("Option - simple tests", function () {
+describe("Option - basic tests", function () {
   describe("Some", () => {
 
     it("isSome === true", function () {
@@ -47,4 +47,24 @@ describe("Option - simple tests", function () {
       expect(none['get']).toBeFalsy()
     });
   })
+
+  describe("Option.from", function () {
+    it("returns None when given undefined", function () {
+      const result = Option.from(undefined)
+      expect(result.isNone()).toBeTruthy()
+    });
+    it("returns None when given a falsy value", function () {
+      const falsyValues = [false, null, undefined, 0, NaN, '', ""]
+      const options = falsyValues.map((o) => Option.from(o))
+      const result = options.every((o) => o.isNone())
+      expect(result).toBeTruthy()
+    });
+    it("returns Some when given a truthy value", function () {
+      const truthyValues = [true, {}, -1, 1, 'A', "A"]
+      const options = truthyValues.map((o) => Option.from(o))
+      const result = options.every((o) => o.isSome())
+      expect(result).toBeTruthy()
+    });
+  });
+
 });

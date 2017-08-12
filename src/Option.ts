@@ -1,4 +1,14 @@
 export abstract class Option<A> {
+  /**
+   * Smart constructor for Options.
+   * Returns None iff `ele` is falsy else Some(ele)
+   *
+   * @param ele The element to convert to a Option
+   * @return {Option} returns a `None` for all falsy values
+   */
+  static from<E>(ele: E): Option<E> {
+    return !!ele ? new Some(ele) : singletonNone
+  }
   protected abstract _isSome(): boolean
   map<B>(fn: (a: A) => B): Option<B> {
     if (this.isSome()) {
@@ -57,8 +67,8 @@ export class None extends Option<never>{
     return false;
   }
 }
-
 export const singletonNone = new None();
+
 
 export class Some<A> extends Option<A>{
   constructor(public value: A) {
