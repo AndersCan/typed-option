@@ -80,7 +80,7 @@ export class None extends Option<never>{
 export const singletonNone = new None();
 
 export class Some<A> extends Option<A>{
-  constructor(public value: A) {
+  constructor(public readonly value: A) {
     super()
   }
   protected _isSome() {
