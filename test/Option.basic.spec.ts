@@ -77,5 +77,22 @@ describe("Option - basic tests", function () {
       const result = Option.from(true, () => false)
       expect(result.isNone()).toBeTruthy()
     });
+    describe("Option.toString", function () {
+      it("returns `None`", function () {
+        const result = None.toString();
+        const expected = 'None';
+        expect(result).toBe(expected)
+      });
+      it("returns `Some(1)`", function () {
+        const result = new Some(1).toString();
+        const expected = 'Some(1)';
+        expect(result).toBe(expected)
+      });
+      it("can handle nested Some", function () {
+        const result = new Some(new Some(1)).toString();
+        const expected = 'Some(Some(1))';
+        expect(result).toBe(expected)
+      });
+    });
   });
 });

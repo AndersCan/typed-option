@@ -1,4 +1,5 @@
 export abstract class Option<A> {
+
   /**
    * Smart constructor for Options.
    * Default predicate returns None iff `ele` is falsy else Some(ele)
@@ -10,7 +11,13 @@ export abstract class Option<A> {
   static from<E>(element: E, predicate: (e: E) => boolean = (e) => !!e): Option<E> {
     return predicate(element) ? new Some(element) : singletonNone
   }
+
+  public toString(): string {
+    return this.map((e) => `Some(${e})`).getOrElse(() => 'None')
+  }
+
   protected abstract _isSome(): boolean
+
   map<B>(fn: (a: A) => B): Option<B> {
     if (this.isSome()) {
       return new Some(fn(this.get()))
@@ -58,6 +65,7 @@ export abstract class Option<A> {
   isNone(): this is None {
     return !this._isSome()
   }
+
   isSome(): this is Some<A> {
     return this._isSome()
   }
@@ -68,8 +76,8 @@ export class None extends Option<never>{
     return false;
   }
 }
-export const singletonNone = new None();
 
+export const singletonNone = new None();
 
 export class Some<A> extends Option<A>{
   constructor(public value: A) {
