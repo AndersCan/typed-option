@@ -74,6 +74,22 @@ if(opt1.isSome()){
 ## Functions
 ### Explanation
 
+`Option.from` gives you a `Some` for `truthy` values and `None` for `falsy` values.
+```javascript
+Option.from(true) // Some(true)
+Option.from({}) // Some({})
+Option.from(false) // None
+Option.from(0) // None
+Option.from('') // None
+```
+You can also pass a predicate that will override what are legal values
+```javascript
+Option.from(false, => () => true) // Some(false)
+Option.from(true, () => false) // None
+Option.from(0, (e) => !isNaN(e)) // Some(0)
+```
+
+
 `map` apply fn to a Option if it is of type `Some`
 ```javascript
 some('world').map((text) => "Hello, " + text) // Some('Hello, world')
@@ -150,6 +166,7 @@ const getMiddleName = (person: Person): Option<string> => {
 }
 ```
 ### Function signatures
+- `Option.from<E>(element: E, predicate: (e: E) => boolean = (e) => !!e): Option<E>;`
 - `map<B>(fn: (a: A) => B): Option<B>;`
 - `flatMap<B>(fn: (a: A) => Option<B>): Option<B>;`
 - `getOrElse(fn: () => A): A;`
