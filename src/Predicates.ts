@@ -2,7 +2,8 @@ export interface IPredicate {
   <T>(input: T): boolean
 }
 export interface IPredicates {
-  [key: string]: IPredicate
+  TRUTHY: IPredicate
+  DEFINED: IPredicate
 }
 export const Predicates: IPredicates = {
   TRUTHY: e => !!e,

@@ -1,3 +1,5 @@
+import { Predicates } from './Predicates'
+
 export abstract class Option<A> {
   /**
    * Smart constructor for Options.
@@ -9,7 +11,7 @@ export abstract class Option<A> {
    */
   static from<E>(
     element: E,
-    predicate: (e: E) => boolean = e => !!e
+    predicate: (e: E) => boolean = Predicates.TRUTHY
   ): Option<E> {
     return predicate(element) ? new Some(element) : singletonNone
   }

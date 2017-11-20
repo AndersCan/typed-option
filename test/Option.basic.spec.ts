@@ -1,4 +1,5 @@
 import { Option, Some, None } from '../src/index'
+import { Predicates } from '../src/Predicates'
 
 const positiveNumber = (input: number): Option<number> => {
   if (input > 0) {
@@ -74,6 +75,10 @@ describe('Option - basic tests', function() {
     it('predicate can disallow truth ', function() {
       const result = Option.from(true, () => false)
       expect(result.isNone()).toBeTruthy()
+    })
+    it('predicate non-defined allows zero', function() {
+      const result = Option.from(0, Predicates.DEFINED)
+      expect(result.isSome()).toBeTruthy()
     })
     describe('Option.toString', function() {
       it('returns `None`', function() {
