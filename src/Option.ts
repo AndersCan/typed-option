@@ -1,5 +1,10 @@
 import { Predicates } from './Predicates'
 
+export interface Matchers<R1, V, R2 = R1> {
+  none: R1 | (() => R1)
+  some: R2 | ((v: V) => R2)
+}
+
 export abstract class Option<A> {
   /**
    * Smart constructor for Options.
@@ -20,50 +25,47 @@ export abstract class Option<A> {
     return this.map(e => `Some(${e})`).getOrElse(() => 'None')
   }
 
-  protected abstract _isSome(): boolean
+  public abstract match<R1, R2 = R1>(matcher: Matchers<R1, A, R2>): R1 | R2
 
   map<B>(fn: (a: A) => B): Option<B> {
-    if (this.isSome()) {
-      return new Some(fn(this.get()))
-    } else {
-      return singletonNone
-    }
+    return this.match<Option<B>>({
+      none: () => singletonNone,
+      some: v => {
+        return new Some(fn(v))
+      }
+    })
   }
 
   flatMap<B>(fn: (a: A) => Option<B>): Option<B> {
-    if (this.isSome()) {
-      return fn(this.get())
-    } else {
-      return singletonNone
-    }
+    return this.match({
+      none: () => singletonNone,
+      some: v => fn(v)
+    })
   }
 
   getOrElse(fn: () => A): A {
-    if (this.isSome()) {
-      return this.get()
-    } else {
-      return fn()
-    }
+    return this.match({
+      none: () => fn(),
+      some: v => v
+    })
   }
 
   orElse(fn: () => Option<A>): Option<A> {
-    if (this.isSome()) {
-      return this
-    } else {
-      return fn()
-    }
+    return this.match({
+      none: () => fn(),
+      some: _ => {
+        return this
+      }
+    })
   }
 
   filter(fn: (a: A) => boolean): Option<A> {
-    if (this.isSome()) {
-      if (fn(this.get())) {
-        return this
-      } else {
-        return singletonNone
+    return this.match({
+      none: () => singletonNone,
+      some: v => {
+        return fn(v) ? this : singletonNone
       }
-    } else {
-      return singletonNone
-    }
+    })
   }
 
   isNone(): this is None {
@@ -73,11 +75,22 @@ export abstract class Option<A> {
   isSome(): this is Some<A> {
     return this._isSome()
   }
+
+  protected _isSome() {
+    return this.match({
+      none: () => false,
+      some: _ => true
+    })
+  }
 }
 
 export class None extends Option<never> {
-  protected _isSome() {
-    return false
+  public match<T>(matcher: Matchers<never, T>) {
+    if (typeof matcher.none === 'function') {
+      return matcher.none()
+    } else {
+      return matcher.none
+    }
   }
 }
 
@@ -87,10 +100,16 @@ export class Some<A> extends Option<A> {
   constructor(public readonly value: A) {
     super()
   }
-  protected _isSome() {
-    return true
-  }
+
   get(): A {
     return this.value
+  }
+
+  public match<R1, R2 = R1>(matcher: Matchers<R1, A, R2>): R1 | R2 {
+    if (typeof matcher.some === 'function') {
+      return matcher.some(this.value)
+    } else {
+      return matcher.some
+    }
   }
 }
