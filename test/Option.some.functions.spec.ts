@@ -8,7 +8,7 @@ const positiveNumber = (input: number): Option<number> => {
   }
 }
 interface Person {
-  name: string,
+  name: string
   middleName?: string
 }
 const people: Person[] = [
@@ -35,39 +35,39 @@ const getMiddleName = (person: Person): Option<string> => {
     return None
   }
 }
-describe("Option - Some - functions", function () {
-  describe("Map", function () {
-    it("map on Some returns Some", function () {
+describe('Option - Some - functions', function() {
+  describe('Map', function() {
+    it('map on Some returns Some', function() {
       const some = positiveNumber(1)
-      const result = some.map((a) => a)
+      const result = some.map(a => a)
       expect(result.isSome()).toBeTruthy()
-    });
+    })
 
-    it("map applies fn to parameter", function () {
+    it('map applies fn to parameter', function() {
       const some = positiveNumber(1)
-      const mapped = some.map((a) => "Mapped-" + a)
-      let result = '';
+      const mapped = some.map(a => 'Mapped-' + a)
+      let result = ''
       if (mapped.isSome()) {
         result = mapped.get()
       }
       expect(result).toEqual('Mapped-1')
-    });
-  });
+    })
+  })
 
-  describe("flatMap", function () {
-    it("returns None when no middleName", function () {
+  describe('flatMap', function() {
+    it('returns None when no middleName', function() {
       const some = findPerson('NoMiddleName')
       const result = some.flatMap(getMiddleName)
       expect(result.isSome()).toBeFalsy()
-    });
+    })
 
-    it("returns Some with middlename", function () {
+    it('returns Some with middlename', function() {
       const some = findPerson('HasMiddleName')
       const result = some.flatMap(getMiddleName)
       expect(result.isSome()).toBeTruthy()
-    });
+    })
 
-    it("value returned is expected string", function () {
+    it('value returned is expected string', function() {
       const some = findPerson('HasMiddleName')
       const someMiddleName = some.flatMap(getMiddleName)
       let result = ''
@@ -75,56 +75,56 @@ describe("Option - Some - functions", function () {
         result = someMiddleName.get()
       }
       expect(result).toEqual('MyMiddleName')
-    });
-  });
+    })
+  })
 
-  describe("getOrElse", function () {
-    it("does not return 'else' value", function () {
+  describe('getOrElse', function() {
+    it("does not return 'else' value", function() {
       const some = positiveNumber(1)
       const result = some.getOrElse(() => -999)
       expect(result).toEqual(1)
-    });
-    it("does not call 'else' function", function () {
+    })
+    it("does not call 'else' function", function() {
       const some = positiveNumber(1)
       const result = some.getOrElse(() => {
         throw Error('none should not call fn')
       })
       expect(result).toEqual(1)
-    });
-  });
+    })
+  })
 
-  describe("orElse", function () {
-    it("does not return 'else' value", function () {
+  describe('orElse', function() {
+    it("does not return 'else' value", function() {
       const some = positiveNumber(1)
       const result = some.orElse(() => positiveNumber(-1))
       expect(result.isSome()).toBeTruthy()
-    });
-    it("returns correct value", function () {
+    })
+    it('returns correct value', function() {
       const some = positiveNumber(1)
       const result = some.orElse(() => positiveNumber(-1))
       if (result.isSome()) {
         expect(result.get()).toEqual(1)
       }
-    });
-  });
+    })
+  })
 
-  describe("filter", function () {
-    it("returns None with false predicate", function () {
+  describe('filter', function() {
+    it('returns None with false predicate', function() {
       const some = positiveNumber(1)
-      const result = some.filter((x) => false)
+      const result = some.filter(x => false)
       expect(result.isNone()).toBeTruthy()
-    });
-    it("returns Some with true predicate", function () {
+    })
+    it('returns Some with true predicate', function() {
       const some = positiveNumber(1)
-      const result = some.filter((a) => true)
+      const result = some.filter(a => true)
       expect(result.isSome()).toBeTruthy()
-    });
-    it("returns Some with false predicate", function () {
+    })
+    it('returns Some with false predicate', function() {
       const some = positiveNumber(1)
-      const result = some.filter((a) => true)
+      const result = some.filter(a => true)
       if (result.isSome()) {
         expect(result.get()).toEqual(1)
       }
-    });
-  });
-});
+    })
+  })
+})
