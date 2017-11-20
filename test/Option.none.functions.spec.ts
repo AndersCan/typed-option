@@ -74,6 +74,16 @@ describe('Option - None - functions', function() {
       const result = none.getOrElse(() => 100)
       expect(result).toEqual(100)
     })
+    it('can return other constant type', function() {
+      const none = positiveNumber(-1)
+      const result = none.getOrElse('text')
+      expect(result).toEqual('text')
+    })
+    it('can return other fn types', function() {
+      const none = positiveNumber(-1)
+      const result = none.getOrElse(() => 'text')
+      expect(result).toEqual('text')
+    })
   })
 
   describe('orElse', function() {
@@ -86,6 +96,16 @@ describe('Option - None - functions', function() {
       const none = positiveNumber(-1)
       const result = none.orElse(() => positiveNumber(1))
       expect(result.getOrElse(() => -1)).toEqual(1)
+    })
+    it('can return other fn type', function() {
+      const none = positiveNumber(-1)
+      const result = none.orElse(() => Option.from('text'))
+      expect(result.getOrElse(() => -1)).toEqual('text')
+    })
+    it('can return other constant type', function() {
+      const none = positiveNumber(-1)
+      const result = none.orElse(Option.from('text'))
+      expect(result.getOrElse(() => -1)).toEqual('text')
     })
 
     describe('filter', function() {

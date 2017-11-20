@@ -43,16 +43,20 @@ export abstract class Option<A> {
     })
   }
 
-  getOrElse(fn: () => A): A {
+  getOrElse<B>(fn: (() => B)): A | B
+  getOrElse<B>(constant: B): A | B
+  getOrElse<B>(input: B | (() => B)): A | B {
     return this.match({
-      none: () => fn(),
+      none: () => (typeof input === 'function' ? input() : input),
       some: v => v
     })
   }
 
-  orElse(fn: () => Option<A>): Option<A> {
+  orElse<B>(fn: () => Option<B>): Option<A | B>
+  orElse<B>(constant: Option<B>): Option<A | B>
+  orElse<B>(input: Option<B> | (() => Option<B>)): Option<A | B> {
     return this.match({
-      none: () => fn(),
+      none: () => (typeof input === 'function' ? input() : input),
       some: _ => {
         return this
       }

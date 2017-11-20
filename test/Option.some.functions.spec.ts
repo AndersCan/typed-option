@@ -91,6 +91,16 @@ describe('Option - Some - functions', function() {
       })
       expect(result).toEqual(1)
     })
+    it('can return other constant type', function() {
+      const some = positiveNumber(1)
+      const result = some.getOrElse('text')
+      expect(result).toEqual(1)
+    })
+    it('can return other fn types', function() {
+      const some = positiveNumber(1)
+      const result = some.getOrElse(() => 'text')
+      expect(result).toEqual(1)
+    })
   })
 
   describe('orElse', function() {
@@ -105,6 +115,16 @@ describe('Option - Some - functions', function() {
       if (result.isSome()) {
         expect(result.get()).toEqual(1)
       }
+    })
+    it('can return other fn type', function() {
+      const some = positiveNumber(1)
+      const result = some.orElse(() => Option.from('text'))
+      expect(result.getOrElse(() => -1)).toEqual(1)
+    })
+    it('can return other constant type', function() {
+      const some = positiveNumber(1)
+      const result = some.orElse(Option.from('text'))
+      expect(result.getOrElse(() => -1)).toEqual(1)
     })
   })
 
