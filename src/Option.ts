@@ -15,10 +15,14 @@ export abstract class Option<A> {
    * @return {Option} returns a `None` for all falsy values
    */
   static from<E>(
-    element: E,
+    element: (E | undefined),
     predicate: (e: E) => boolean = Predicates.TRUTHY
   ): Option<E> {
-    return predicate(element) ? new Some(element) : singletonNone
+    if (element !== undefined) {
+      return predicate(element) ? new Some(element) : singletonNone
+    } else {
+      return singletonNone
+    }
   }
 
   public toString(): string {

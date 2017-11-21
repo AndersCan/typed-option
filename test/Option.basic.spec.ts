@@ -43,7 +43,7 @@ describe('Option - basic tests', function() {
 
     it('None has no get function ', function() {
       const none = positiveNumber(-1)
-      expect(none['get']).toBeFalsy()
+      expect((none as any)['get']).toBeFalsy()
     })
   })
 
@@ -64,14 +64,7 @@ describe('Option - basic tests', function() {
       const result = options.every(o => o.isSome())
       expect(result).toBeTruthy()
     })
-    it('predicate can allow undefined ', function() {
-      const result = Option.from(undefined, () => true)
-      expect(result.isSome()).toBeTruthy()
-    })
-    it('can return Some(undefined)', function() {
-      const result = Option.from(undefined, () => true)
-      expect(result.getOrElse(() => true)).toBeUndefined()
-    })
+
     it('predicate can disallow truth ', function() {
       const result = Option.from(true, () => false)
       expect(result.isNone()).toBeTruthy()
