@@ -52,15 +52,15 @@ describe('Option - basic tests', function() {
       const result = Option.from(undefined)
       expect(result.isNone()).toBeTruthy()
     })
-    it('returns None when given a falsy value', function() {
-      const falsyValues = [false, null, undefined, 0, NaN, '', '']
-      const options = falsyValues.map(o => Option.from(o))
+    it('returns None when given a undefined value', function() {
+      const undefinedValues = [void 0, undefined, (() => {})()]
+      const options = undefinedValues.map(o => Option.from(o))
       const result = options.every(o => o.isNone())
       expect(result).toBeTruthy()
     })
-    it('returns Some when given a truthy value', function() {
-      const truthyValues = [true, {}, -1, 1, 'A', 'A']
-      const options = truthyValues.map(o => Option.from(o))
+    it('returns Some when given a non-undefined value', function() {
+      const nonUndefinedValues = [true, {}, -1, 1, null, 'A']
+      const options = nonUndefinedValues.map(o => Option.from(o))
       const result = options.every(o => o.isSome())
       expect(result).toBeTruthy()
     })

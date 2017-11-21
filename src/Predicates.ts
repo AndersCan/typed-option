@@ -4,8 +4,10 @@ export interface IPredicate {
 export interface IPredicates {
   TRUTHY: IPredicate
   DEFINED: IPredicate
+  ANY: IPredicate
 }
 export const Predicates: IPredicates = {
   TRUTHY: e => !!e,
-  DEFINED: e => e !== undefined
+  DEFINED: e => e !== undefined,
+  ANY: e => true
 }

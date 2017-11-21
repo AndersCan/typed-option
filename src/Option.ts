@@ -6,17 +6,18 @@ export interface Matchers<R1, V, R2 = R1> {
 }
 
 export abstract class Option<A> {
+  protected constructor() {}
   /**
    * Smart constructor for Options.
-   * Default predicate returns None iff `ele` is falsy else Some(ele)
+   * Returns None if `element` is `undefined` or fails predicate check.
    *
    * @param element The element to convert to a Option
    * @param predicate Optional predicate to determine if ele is None or Some
    * @return {Option} returns a `None` for all falsy values
    */
-  static from<E>(
-    element: (E | undefined),
-    predicate: (e: E) => boolean = Predicates.TRUTHY
+  public static from<E>(
+    element: E | undefined,
+    predicate: (e: E) => boolean = Predicates.ANY
   ): Option<E> {
     if (element !== undefined) {
       return predicate(element) ? new Some(element) : singletonNone
@@ -31,13 +32,14 @@ export abstract class Option<A> {
 
   public abstract match<R1, R2 = R1>(matcher: Matchers<R1, A, R2>): R1 | R2
 
-  map<B>(fn: (a: A) => B): Option<B> {
-    return this.match<Option<B>>({
-      none: () => singletonNone,
-      some: v => {
-        return new Some(fn(v))
+  map<B>(fn: (a: A) => B | undefined): Option<B> {
+    if (this.isSome()) {
+      const result = fn(this.get())
+      if (result) {
+        return new Some(result)
       }
-    })
+    }
+    return singletonNone
   }
 
   flatMap<B>(fn: (a: A) => Option<B>): Option<B> {
@@ -93,6 +95,9 @@ export abstract class Option<A> {
 }
 
 export class None extends Option<never> {
+  constructor() {
+    super()
+  }
   public match<T>(matcher: Matchers<never, T>) {
     if (typeof matcher.none === 'function') {
       return matcher.none()
@@ -115,7 +120,7 @@ export class Some<A> extends Option<A> {
 
   public match<R1, R2 = R1>(matcher: Matchers<R1, A, R2>): R1 | R2 {
     if (typeof matcher.some === 'function') {
-      return matcher.some(this.value)
+      return matcher.some(this.get())
     } else {
       return matcher.some
     }
