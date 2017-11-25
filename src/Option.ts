@@ -35,7 +35,7 @@ export abstract class Option<A> {
   map<B>(fn: (a: A) => B | undefined): Option<B> {
     if (this.isSome()) {
       const result = fn(this.get())
-      if (result) {
+      if (result !== undefined) {
         return new Some(result)
       }
     }

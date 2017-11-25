@@ -52,6 +52,35 @@ describe('Option - Some - functions', function() {
       }
       expect(result).toEqual('Mapped-1')
     })
+    it('map can return false', function() {
+      const some = positiveNumber(1)
+      const mapped = some.map(a => false)
+      let result = true
+      if (mapped.isSome()) {
+        result = mapped.get()
+      }
+      expect(result).toEqual(false)
+    })
+    it('map can return {}', function() {
+      const option = Option.from({})
+      const result = option.map(_ => _)
+      expect(result.isSome()).toEqual(true)
+    })
+    it('map can return all falsy values', function() {
+      const some = positiveNumber(1)
+      const mapped = some
+        .map(a => null)
+        .map(a => false)
+        .map(a => 0)
+        .map(a => '')
+        .map(a => ({}))
+        .map(a => false)
+      let result = true
+      if (mapped.isSome()) {
+        result = mapped.get()
+      }
+      expect(result).toEqual(false)
+    })
   })
 
   describe('flatMap', function() {
