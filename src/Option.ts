@@ -32,6 +32,13 @@ export abstract class Option<A> {
 
   public abstract match<R1, R2 = R1>(matcher: Matchers<R1, A, R2>): R1 | R2
 
+  do(fn: (a: A) => void): this {
+    if (this.isSome()) {
+      fn(this.get())
+    }
+    return this
+  }
+
   map<B>(fn: (a: A) => B | undefined): Option<B> {
     if (this.isSome()) {
       const result = fn(this.get())
@@ -53,7 +60,8 @@ export abstract class Option<A> {
   getOrElse<B>(constant: B): A | B
   getOrElse<B>(input: B | (() => B)): A | B {
     return this.match({
-      none: () => (typeof input === 'function' ? input() : input),
+      none: () =>
+        console.log('herer') || (typeof input === 'function' ? input() : input),
       some: v => v
     })
   }

@@ -47,6 +47,11 @@ const result2 = Option.from('Hello, world')
   .getOrElse('FAILED')
 console.log(result2)
 ```
+## Intro
+An `Option` is either of type `Some` or `None`.
+* **Some** - represents a value of something (a *defined* value)
+* **None** - represents a value of nothing (an *undefined* value)
+You do not need to know if previous calculations have failed before calling the next one. (as seen above)
 
 ## Functions
 ### Explanation
@@ -62,11 +67,17 @@ Option.from(undefined) // None
 ```
 You can also pass an additional predicate of what a legal value is.
 ```javascript
-Option.from(false, => () => true) // Some(false)
+Option.from(false, () => true) // Some(false)
 Option.from(true, () => false) // None
-Option.from(0, (e) => !isNaN(e)) // Some(0)
+Option.from(undefined, () => true) // None
+
 ```
 
+`do` run a fn to a Option if it is of type `Some`. Similar to `map`, but does not alter the Option.
+```javascript
+some('world').do(text => console.log(text)) // logs: 'world'
+none().do((text) => console.log(text)) // logs nothing
+```
 
 `map` apply fn to a Option if it is of type `Some`
 ```javascript
@@ -76,7 +87,7 @@ none().map((text) => "Hello, " + text) // None
 
 `flatMap` Same as map, but for when `fn` returns a option. `flatMap` removes the nested option.
 ```javascript
-getOptionFn(...)
+function getOptionFn(...): Option<string>
 const option = ...
 option.map(getOptionFn) // Some(Some('MyMiddleName'))
 option.flatMap(getOptionFn) // Some('MyMiddleName')
@@ -99,6 +110,18 @@ none().orElse(() => Some(999)) // Some(999)
 some(1).filter((v) => false) // None()
 some(100).filter((v) => true) // Some(100)
 none().filter((v) => true) // None()
+```
+
+`match` gives a `pattern matching` way to modify a Option
+```javascript
+some(1).match({
+  none: () => 'a none',
+  some: v => `a Some(${v})`
+}) // a Some(1)
+none().match({
+  none: () => 'a none',
+  some: v => `a Some(${v})`
+}) // a none
 ```
 
 `isNone` tests if the given `Option` is of type `None`,
