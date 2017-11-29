@@ -41,17 +41,21 @@ Into this:
 import { Option } from 'typed-option'
 
 const result2 = Option.from('Hello, world')
-  .map(canFailFn)
-  .map(canFailFn)
-  .map(canFailFn)
+  .map(v => canFailFn(v)) // v is of type string.
+  .map(v => canFailFn(v)) // v is of type string.
+  .map(v => canFailFn(v)) // v is of type string.
   .getOrElse('FAILED')
 console.log(result2)
 ```
+i
+
 ## Intro
 An `Option` is either of type `Some` or `None`.
 * **Some** - represents a value of something (a *defined* value)
 * **None** - represents a value of nothing (an *undefined* value)
-You do not need to know if previous calculations have failed before calling the next one. (as seen above)
+
+
+With Options, you do not need to know if previous calculations have failed. This allows you to handle the final failure before calling the next one. (as seen above)
 
 ## Functions
 ### Explanation
@@ -59,8 +63,8 @@ You do not need to know if previous calculations have failed before calling the 
 `Option.from` gives you a `None` for `undefined` values and a `Some` for `defined` values.
 ```javascript
 Option.from(true) // Some(true)
+Option.from(false) // Some(false)
 Option.from({}) // Some({})
-Option.from(false) // Some({})
 Option.from(0) // Some(0)
 Option.from('') // Some('')
 Option.from(undefined) // None
@@ -85,18 +89,20 @@ some('world').map((text) => "Hello, " + text) // Some('Hello, world')
 none().map((text) => "Hello, " + text) // None
 ```
 
-`flatMap` Same as map, but for when `fn` returns a option. `flatMap` removes the nested option.
+`flatMap` Same as map, but for when your `fn` returns a Option. `flatMap` will remove the nested option.
 ```javascript
 function getOptionFn(...): Option<string>
-const option = ...
-option.map(getOptionFn) // Some(Some('MyMiddleName'))
-option.flatMap(getOptionFn) // Some('MyMiddleName')
+const option = ... // Some('Hello, Option')
+option.map(getOptionFn) // Some(Some('Hello, Option'))
+option.flatMap(getOptionFn) // Some('Hello, Option')
 ```
 
 `getOrElse` get the value from a `Some` or return the `else` value for a `None`
 ```javascript
 some(1).getOrElse(() => 999) // 1
 none().getOrElse(() => 999) // 999
+some(1).getOrElse(999) // 1
+none().getOrElse(999) // 999
 ```
 
 `orElse` is the same as `getOrElse`, but `else` returns a Option
@@ -112,7 +118,7 @@ some(100).filter((v) => true) // Some(100)
 none().filter((v) => true) // None()
 ```
 
-`match` gives a `pattern matching` way to modify a Option
+`match` gives a `pattern matching` syntax way to modify a Option. Usefull for when you only care if the Option is of type `Some`
 ```javascript
 some(1).match({
   none: () => 'a none',
@@ -122,6 +128,11 @@ none().match({
   none: () => 'a none',
   some: v => `a Some(${v})`
 }) // a none
+
+optionValueIgnored().match({
+  none: 'failure',
+  some: `success`
+})
 ```
 
 `isNone` tests if the given `Option` is of type `None`,

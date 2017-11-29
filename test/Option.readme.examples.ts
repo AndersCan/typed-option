@@ -21,7 +21,20 @@ if (a) {
 // === into this ===
 
 const result2 = Option.from('Hello, world')
-  .map(canFailFn)
-  .map(canFailFn)
-  .map(canFailFn)
+  .map(v => canFailFn(v)) // v is of type string.
+  .map(v => canFailFn(v)) // v is of type string.
+  .map(v => canFailFn(v)) // v is of type string.
   .getOrElse('FAILED')
+
+// optional
+
+interface MyNumbers {
+  a?: number
+  b?: number
+}
+const myNumbers: MyNumbers = {
+  a: 5,
+  b: undefined
+}
+Option.from(myNumbers.a)
+Option.from(myNumbers.b)

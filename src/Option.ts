@@ -30,14 +30,22 @@ export abstract class Option<A> {
   public toString(): string {
     return this.map(e => `Some(${e})`).getOrElse(() => 'None')
   }
-
+  /**
+   * Runs function `fn` with the current value
+   * @param fn function to apply to value
+   * @returns this
+   */
   do(fn: (a: A) => void): this {
     if (this.isSome()) {
       fn(this.get())
     }
     return this
   }
-
+  /**
+   * Maps the current value to a new value.
+   * @param fn function to `map` current value to a new value
+   * @returns Some(newValue) or None
+   */
   map<B>(fn: (a: A) => B | undefined): Option<B> {
     if (this.isSome()) {
       const result = fn(this.get())
@@ -48,6 +56,11 @@ export abstract class Option<A> {
     return singletonNone
   }
 
+  /**
+   * Same as `map`, but for when `fn` returns a Option. `flatMap` removes the nested `Option`
+   * @param fn function that returns a Option
+   * @returns Some(newValue) or None
+   */
   flatMap<B>(fn: (a: A) => Option<B>): Option<B> {
     if (this.isSome()) {
       return fn(this.get())
@@ -56,6 +69,11 @@ export abstract class Option<A> {
     }
   }
 
+  /**
+   * Some - returns the current value.
+   * None - returns the given `input`.
+   * @param input function or constant that is returned if `this` is `None`
+   */
   getOrElse<B>(fn: (() => B)): A | B
   getOrElse<B>(constant: B): A | B
   getOrElse<B>(input: B | (() => B)): A | B {
@@ -65,7 +83,11 @@ export abstract class Option<A> {
       return typeof input === 'function' ? input() : input
     }
   }
-
+  /**
+   * Some - returns `this`.
+   * None - returns the given `input`.
+   * @param input function or constant that is returned if `this` is `None`
+   */
   orElse<B>(fn: () => Option<B>): Option<A | B>
   orElse<B>(constant: Option<B>): Option<A | B>
   orElse<B>(input: Option<B> | (() => Option<B>)): Option<A | B> {
@@ -75,7 +97,11 @@ export abstract class Option<A> {
       return typeof input === 'function' ? input() : input
     }
   }
-
+  /**
+   * Tests that the current value holds the `fn` predicate
+   * @param fn predicate function to test current value
+   * @returns `this` if predicate holds else None
+   */
   filter(fn: (a: A) => boolean): Option<A> {
     if (this.isSome()) {
       return fn(this.get()) ? this : singletonNone
@@ -83,7 +109,10 @@ export abstract class Option<A> {
       return singletonNone
     }
   }
-
+  /**
+   * A `pattern matching` syntax on Options
+   * @param matcher object with keys `none` and `some`
+   */
   public match<R1, R2 = R1>(matcher: Matchers<R1, A, R2>): R1 | R2 {
     if (this.isSome()) {
       if (typeof matcher.some === 'function') {
