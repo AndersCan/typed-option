@@ -8,7 +8,7 @@ function canFailFn(x: string): string | undefined {
 }
 
 let result1 = 'FAILED'
-const a = canFailFn('Hello, world') // a is string | undefined
+const a = canFailFn('SUCCESS') // a is string | undefined
 if (a) {
   const b = canFailFn(a) // b is string | undefined
   if (b) {
@@ -20,7 +20,7 @@ if (a) {
 }
 // === into this ===
 
-const result2 = Option.from('Hello, world')
+const result2 = Option.from('SUCCESS')
   .map(v => canFailFn(v)) // v is of type string.
   .map(v => canFailFn(v)) // v is of type string.
   .map(v => canFailFn(v)) // v is of type string.
@@ -28,13 +28,12 @@ const result2 = Option.from('Hello, world')
 
 // optional
 
-interface MyNumbers {
+interface Foo {
   a?: number
-  b?: number
 }
-const myNumbers: MyNumbers = {
-  a: 5,
-  b: undefined
+const myFoo: Foo = {
+  a: 5
 }
-Option.from(myNumbers.a)
-Option.from(myNumbers.b)
+myFoo.a // 'number | undefined`'
+const fooOption = Option.from(myFoo.a) // Option<number>
+fooOption.map(a => a) // typeof a is number

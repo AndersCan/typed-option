@@ -26,6 +26,18 @@ export abstract class Option<A> {
       return singletonNone
     }
   }
+  /**
+   * Combines two options into a new option.
+   * Curried for easier integration with `[].reduce`
+   * @param fn function that combines two Options
+   */
+  public static combine<A, B, C>(
+    fn: (a: A, b: B) => C
+  ): (a: Option<A>, b: Option<B>) => Option<C> {
+    return function(optA: Option<A>, optB: Option<B>) {
+      return optA.flatMap(a => optB.map(b => fn(a, b)))
+    }
+  }
 
   public toString(): string {
     return this.map(e => `Some(${e})`).getOrElse(() => 'None')
@@ -43,7 +55,7 @@ export abstract class Option<A> {
   }
   /**
    * Maps the current value to a new value.
-   * @param fn function to `map` current value to a new value
+   * @param fn function that `map`s the current value to a new value
    * @returns Some(newValue) or None
    */
   map<B>(fn: (a: A) => B | undefined): Option<B> {
