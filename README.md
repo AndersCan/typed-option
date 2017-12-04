@@ -3,10 +3,10 @@
 [![codecov](https://codecov.io/gh/AndersCan/typed-option/branch/master/graph/badge.svg)](https://codecov.io/gh/AndersCan/typed-option)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 
-Option library with types.
+Library for working with `Option`s in a type safe manner.
 
 ## tl;dr
-Makes working with, potentially, `undefined` values and functions more concise.
+`Option`s makes working with, potentially, `undefined` values more concise and easy to read.
 
 **Example**
 
@@ -23,13 +23,13 @@ function canFailFn(x: string): string | undefined {
 Turn something like this:
 ```javascript
 let result = 'FAILED'
-const a = canFailFn('Hello, world') // a is string | undefined
+const a = canFailFn('SUCCESS') // a is string | undefined
 if (a) {
   const b = canFailFn(a) // b is string | undefined
   if (b) {
     const c = canFailFn(b) // c is string | undefined
     if (c) {
-      result = 'SUCCESS' // c is string
+      result = c // c is string
     }
   }
 }
@@ -40,23 +40,37 @@ Into this:
 ```javascript
 import { Option } from 'typed-option'
 
-const result2 = Option.from('Hello, world')
+const result2 = Option.from('SUCCESS')
   .map(v => canFailFn(v)) // v is of type string.
   .map(v => canFailFn(v)) // v is of type string.
   .map(v => canFailFn(v)) // v is of type string.
   .getOrElse('FAILED')
 console.log(result2)
 ```
-i
 
 ## Intro
 An `Option` is either of type `Some` or `None`.
 * **Some** - represents a value of something (a *defined* value)
 * **None** - represents a value of nothing (an *undefined* value)
 
+In the example above, we start with a `Some('SUCCESS')`. Then we apply the function `canFailFn` multiple times to the value of our `Some`. If the computation fails at any point, we are returned a `None`.
 
-With Options, you do not need to know if previous calculations have failed. This allows you to handle the final failure before calling the next one. (as seen above)
+With Options, you do not need to know if you have a `Some` or `None` when applying functions. Only when you need the result do you have to deal with the potential `None` case. This is typically done by calling the `.getOrElse` function (as seen above).
 
+### Unions with undefined
+One thing to note is that `undefined` is removed from union types:
+```javascript
+interface Foo {
+  a?: number
+}
+const myFoo: Foo = {
+  a: 5
+}
+myFoo.a // 'number | undefined`'
+const fooOption = Option.from(myFoo.a) // Option<number>
+fooOption.map(a => a) // typeof a is number
+```
+This means that you will not have to worry about manually testing for `undefined`. A `Some` will never contain an `undefined` value.
 ## Functions
 ### Explanation
 
