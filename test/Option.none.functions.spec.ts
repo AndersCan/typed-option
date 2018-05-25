@@ -107,13 +107,5 @@ describe('Option - None - functions', function() {
       const result = none.orElse(Option.from('text'))
       expect(result.getOrElse(() => -1)).toEqual('text')
     })
-
-    describe('filter', function() {
-      it('returns None', function() {
-        const none = positiveNumber(-1)
-        const result = none.filter(a => true)
-        expect(result.isNone()).toBeTruthy()
-      })
-    })
   })
 })

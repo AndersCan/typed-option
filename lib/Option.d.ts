@@ -59,6 +59,7 @@ export declare abstract class Option<A> {
      * @returns `this` if predicate holds else None
      */
     filter(fn: (a: A) => boolean): Option<A>;
+    filter<B extends A>(fn: (a: A) => a is B): Option<B>;
     /**
      * A `pattern matching` syntax on Options
      * @param matcher object with keys `none` and `some`

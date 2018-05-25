@@ -156,24 +156,4 @@ describe('Option - Some - functions', function() {
       expect(result.getOrElse(() => -1)).toEqual(1)
     })
   })
-
-  describe('filter', function() {
-    it('returns None with false predicate', function() {
-      const some = positiveNumber(1)
-      const result = some.filter(x => false)
-      expect(result.isNone()).toBeTruthy()
-    })
-    it('returns Some with true predicate', function() {
-      const some = positiveNumber(1)
-      const result = some.filter(a => true)
-      expect(result.isSome()).toBeTruthy()
-    })
-    it('returns Some with false predicate', function() {
-      const some = positiveNumber(1)
-      const result = some.filter(a => true)
-      if (result.isSome()) {
-        expect(result.get()).toEqual(1)
-      }
-    })
-  })
 })
