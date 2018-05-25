@@ -109,12 +109,15 @@ export abstract class Option<A> {
       return typeof input === 'function' ? input() : input
     }
   }
+
   /**
    * Tests that the current value holds the `fn` predicate
    * @param fn predicate function to test current value
    * @returns `this` if predicate holds else None
    */
-  filter(fn: (a: A) => boolean): Option<A> {
+  filter(fn: (a: A) => boolean): Option<A>
+  filter<B extends A>(fn: (a: A) => a is B): Option<B>
+  filter<B extends A>(fn: (a: A) => a is B): Option<A> | Option<B> {
     if (this.isSome()) {
       return fn(this.get()) ? this : singletonNone
     } else {

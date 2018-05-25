@@ -7,8 +7,8 @@
   "scripts": {
     "lint": "prettier \"./{src,test}/**.ts\" --write",
     "build": "tsc -p .",
-    "jest": "jest",
-    "ts-node": "ts-node"
+    "build:test": "tsc --noEmit -p ./test",
+    "jest": "jest"
   },
   "keywords": [
     "option",
