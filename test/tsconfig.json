@@ -6,6 +6,7 @@
     "module": "commonjs",
     "skipLibCheck": true,
     "target": "es2015",
-    "removeComments": true
+    "removeComments": true,
+    "noEmitOnError": true
   }
 }
