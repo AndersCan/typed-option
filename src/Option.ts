@@ -5,22 +5,24 @@ export interface Matchers<R1, V, R2 = R1> {
   some: R2 | ((v: V) => R2)
 }
 
+export type NoneTypes = undefined | null
+
 export abstract class Option<A> {
   protected constructor() {}
   protected abstract _isSome(): boolean
   /**
    * Smart constructor for Options.
-   * Returns None if `element` is `undefined` or fails predicate check.
+   * Returns None if `element` is either `undefined`, `null`, or fails predicate check.
    *
    * @param element The element to convert to a Option
    * @param predicate Optional predicate to determine if ele is None or Some
    * @return {Option} returns a `None` for all falsy values
    */
   public static from<E>(
-    element: E | undefined,
+    element: E | NoneTypes,
     predicate: (e: E) => boolean = Predicates.ANY
   ): Option<E> {
-    if (element !== undefined) {
+    if (element !== undefined && element !== null) {
       return predicate(element) ? new Some(element) : singletonNone
     } else {
       return singletonNone
@@ -58,10 +60,10 @@ export abstract class Option<A> {
    * @param fn function that `map`s the current value to a new value
    * @returns Some(newValue) or None
    */
-  map<B>(fn: (a: A) => B | undefined): Option<B> {
+  map<B>(fn: (a: A) => B | NoneTypes): Option<B> {
     if (this.isSome()) {
       const result = fn(this.get())
-      if (result !== undefined) {
+      if (result !== undefined && result !== null) {
         return new Some(result)
       }
     }

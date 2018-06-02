@@ -1,5 +1,9 @@
 # Upgrade guide
 
+## v3 -> next
+
+`Option.from` can no longer return `null` as a `Some`.
+
 ## v2 -> v3
 
 `Option.from` can no longer return `undefined` as a `Some`.

@@ -69,7 +69,6 @@ describe('Option - Some - functions', function() {
     it('map can return all falsy values', function() {
       const some = positiveNumber(1)
       const mapped = some
-        .map(a => null)
         .map(a => false)
         .map(a => 0)
         .map(a => '')

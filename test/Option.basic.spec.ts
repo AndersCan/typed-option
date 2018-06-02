@@ -59,7 +59,7 @@ describe('Option - basic tests', function() {
       expect(result).toBeTruthy()
     })
     it('returns Some when given a non-undefined value', function() {
-      const nonUndefinedValues = [true, {}, -1, 1, null, 'A']
+      const nonUndefinedValues = [true, {}, -1, 1, 'A']
       const options = nonUndefinedValues.map(o => Option.from(o))
       const result = options.every(o => o.isSome())
       expect(result).toBeTruthy()
