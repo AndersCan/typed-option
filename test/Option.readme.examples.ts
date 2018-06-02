@@ -1,6 +1,6 @@
 import { Option } from '../src/index'
 
-function canFailFn(x: string): string | undefined {
+function canFailFn(x: string): string | undefined | null {
   if (0.1 < Math.random()) {
     return x
   }
