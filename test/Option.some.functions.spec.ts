@@ -112,6 +112,11 @@ describe('Option - Some - functions', function() {
       const result = some.getOrElse(() => -999)
       expect(result).toEqual(1)
     })
+    it("does not return 'else' value", function() {
+      const some = positiveNumber(1)
+      const result = some.getOrElse(() => -999)
+      expect(result).toEqual(1)
+    })
     it("does not call 'else' function", function() {
       const some = positiveNumber(1)
       const result = some.getOrElse(() => {

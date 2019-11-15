@@ -1,11 +1,13 @@
 {
   "compilerOptions": {
+    "strictFunctionTypes": true,
+    "strictNullChecks": true,
     "strict": true,
     "declaration": true,
     "outDir": "lib",
     "module": "commonjs",
     "skipLibCheck": true,
-    "noEmitOnError": true
+    "noEmitOnError": true,
   },
   "include": [
     "src"
