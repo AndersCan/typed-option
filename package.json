@@ -8,7 +8,7 @@
     "lint": "prettier \"./{src,test}/**.ts\" --write",
     "build": "tsc -p .",
     "build:test": "tsc --noEmit -p ./test",
-    "jest": "jest"
+    "test": "jest"
   },
   "keywords": [
     "option",
@@ -19,26 +19,16 @@
   "author": "anderscan",
   "license": "MIT",
   "devDependencies": {
-    "@types/jest": "^22.2.3",
+    "@babel/core": "^7.7.2",
+    "@babel/preset-env": "^7.7.1",
+    "@babel/preset-typescript": "^7.7.2",
+    "@types/jest": "^24.0.23",
+    "babel-jest": "^24.9.0",
     "codecov": "^3.0.2",
     "fast-check": "^1.1.3",
-    "jest": "^23.0.0",
+    "jest": "^24.9.0",
     "prettier": "^1.12.1",
-    "ts-jest": "^22.4.6",
-    "typescript": "2.8.3"
+    "typescript": "^3.7.2"
   },
-  "repository": "AndersCan/typed-option",
-  "jest": {
-    "coverageDirectory": "./coverage/",
-    "transform": {
-      "^.+\\.ts$": "ts-jest"
-    },
-    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
-    "moduleFileExtensions": [
-      "ts",
-      "js",
-      "json",
-      "node"
-    ]
-  }
+  "repository": "AndersCan/typed-option"
 }

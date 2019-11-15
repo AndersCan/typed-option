@@ -88,13 +88,13 @@ export abstract class Option<A> {
    * None - returns the given `input`.
    * @param input function or constant that is returned if `this` is `None`
    */
-  getOrElse<B>(fn: (() => B)): A | B
+  getOrElse<B>(fn: () => B): A | B
   getOrElse<B>(constant: B): A | B
   getOrElse<B>(input: B | (() => B)): A | B {
     if (this.isSome()) {
       return this.get()
     } else {
-      return typeof input === 'function' ? input() : input
+      return isFunction(input) ? input() : input
     }
   }
   /**
@@ -132,13 +132,13 @@ export abstract class Option<A> {
    */
   public match<R1, R2 = R1>(matcher: Matchers<R1, A, R2>): R1 | R2 {
     if (this.isSome()) {
-      if (typeof matcher.some === 'function') {
+      if (isFunction(matcher.some)) {
         return matcher.some(this.get())
       } else {
         return matcher.some
       }
     } else {
-      if (typeof matcher.none === 'function') {
+      if (isFunction(matcher.none)) {
         return matcher.none()
       } else {
         return matcher.none
@@ -178,4 +178,8 @@ export class Some<A> extends Option<A> {
   get(): A {
     return this.value
   }
+}
+
+function isFunction(fn: unknown): fn is Function {
+  return typeof fn === 'function'
 }
