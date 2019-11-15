@@ -46,6 +46,14 @@ const result2 = Option.from('SUCCESS')
   .map(v => canFailFn(v)) // v is of type string.
   .getOrElse('FAILED')
 console.log(result2)
+
+// or just
+const result3 = Option.from('SUCCESS')
+  .map(canFailFn)
+  .map(canFailFn)
+  .map(canFailFn)
+  .getOrElse('FAILED')
+console.log(result3)
 ```
 
 ## Intro
@@ -74,6 +82,8 @@ This means that you will not have to worry about manually testing for `undefined
 ## Functions
 ### Explanation
 
+#### Option.from
+
 `Option.from` gives you a `None` for `undefined` values and a `Some` for `defined` values.
 ```javascript
 Option.from(true) // Some(true)
@@ -90,26 +100,32 @@ Option.from(true, () => false) // None
 Option.from(undefined, () => true) // None
 
 ```
+#### do
 
-`do` run a fn to a Option if it is of type `Some`. Similar to `map`, but does not alter the Option.
+`do` runs a fn on a Option if it is of type `Some`. Similar to `map`, but does not alter/return a new Option.
 ```javascript
 some('world').do(text => console.log(text)) // logs: 'world'
-none().do((text) => console.log(text)) // logs nothing
+none().do((text) => console.log(text)) // logs:
 ```
 
-`map` apply fn to a Option if it is of type `Some`
+#### map
+
+`map` apply a function to a Option if it is of type `Some`
 ```javascript
 some('world').map((text) => "Hello, " + text) // Some('Hello, world')
 none().map((text) => "Hello, " + text) // None
 ```
 
-`flatMap` Same as map, but for when your `fn` returns a Option. `flatMap` will remove the nested option.
+#### flatMap
+`flatMap` Same as map, but for when your function returns an Option. `flatMap` will remove the nested option.
 ```javascript
 function getOptionFn(...): Option<string>
 const option = ... // Some('Hello, Option')
 option.map(getOptionFn) // Some(Some('Hello, Option'))
 option.flatMap(getOptionFn) // Some('Hello, Option')
 ```
+
+#### getOrElse
 
 `getOrElse` get the value from a `Some` or return the `else` value for a `None`
 ```javascript
@@ -118,12 +134,14 @@ none().getOrElse(() => 999) // 999
 some(1).getOrElse(999) // 1
 none().getOrElse(999) // 999
 ```
+#### orElse
 
-`orElse` is the same as `getOrElse`, but `else` returns a Option
+`orElse` is the same as `getOrElse`, but `else` returns an Option
 ```javascript
 some(1).orElse(() => Some(999)) // Some(1)
 none().orElse(() => Some(999)) // Some(999)
 ```
+#### filter
 
 `filter` gives a predicate that a `Some` must hold. If not, returns `None`
 ```javascript
@@ -132,12 +150,14 @@ some(100).filter((v) => true) // Some(100)
 none().filter((v) => true) // None()
 ```
 
-`match` gives a `pattern matching` syntax way to modify a Option. Usefull for when you only care if the Option is of type `Some`
+#### match
+`match` gives a `pattern matching` looking syntax to work with options.
 ```javascript
 some(1).match({
   none: () => 'a none',
   some: v => `a Some(${v})`
 }) // a Some(1)
+
 none().match({
   none: () => 'a none',
   some: v => `a Some(${v})`
@@ -148,6 +168,7 @@ optionValueIgnored().match({
   some: `success`
 })
 ```
+#### isNone & isSome
 
 `isNone` tests if the given `Option` is of type `None`,
 `isSome` tests if the given `Option` is of type `Some`

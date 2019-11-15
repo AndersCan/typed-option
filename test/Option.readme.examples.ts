@@ -1,7 +1,7 @@
 import { Option } from '../src/index'
 
 function canFailFn(x: string): string | undefined | null {
-  if (0.1 < Math.random()) {
+  if (Math.random() < 0.1) {
     return x
   }
   return undefined
@@ -18,6 +18,7 @@ if (a) {
     }
   }
 }
+console.log(result1)
 // === into this ===
 
 const result2 = Option.from('SUCCESS')
@@ -25,6 +26,15 @@ const result2 = Option.from('SUCCESS')
   .map(v => canFailFn(v)) // v is of type string.
   .map(v => canFailFn(v)) // v is of type string.
   .getOrElse('FAILED')
+console.log(result2)
+
+// or just
+const result3 = Option.from('SUCCESS')
+  .map(canFailFn)
+  .map(canFailFn)
+  .map(canFailFn)
+  .getOrElse('FAILED')
+console.log(result3)
 
 // optional
 
